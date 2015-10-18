@@ -8,11 +8,17 @@ var mongoose = require('mongoose');
 var port = process.env.PORT || 8080;
 
 var Job = require('./models/jobs');
+var engines = require('consolidate');
 
+app.set('views', __dirname + '/public');
+app.engine('html', engines.mustache);
+app.set('view engine', 'html');
 mongoose.connect('mongodb://localhost:27017/dice');
 
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
+
 
 app.use(function(req, res, next) {
  res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,7 +33,11 @@ app.use(morgan('dev'));
 app.get('/', function(req, res) {
   res.send('Welcome to the Home page!');
 });
-
+/*
+app.get('/index', function(req, res) {
+  res.render('index');
+});
+*/
 var apiRouter = express.Router();
 
 apiRouter.use(function(req, res, next) {
@@ -115,7 +125,7 @@ apiRouter.route('/jobs/:job_id')
       res.json({message : 'Job has been removed.'});
     });
   })
-
+app.set('view engine', 'html');
 app.use('/api', apiRouter);
 
 app.listen(port);
