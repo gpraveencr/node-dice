@@ -85,6 +85,7 @@ apiRouter.route('/jobs')
 
 apiRouter.route('/jobs/:job_id')
   .get(function(req, res) {
+      console.log('GET call: ' + req.params.job_id);
     Job.findById(req.params.job_id, function(err, job) {
       if(err) {
         res.send(err);
